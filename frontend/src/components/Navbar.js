@@ -30,9 +30,13 @@ export default function Navbar() {
           <Link to="/" style={{ color: "#fff", textDecoration: "none" }}>
             Home
           </Link>
+          <li>
+            <a href="/messages">Messages</a>
+          </li>
           <Link to="/profile" style={{ color: "#fff", textDecoration: "none" }}>
             Profile
           </Link>
+
           <button
             onClick={handleLogout}
             style={{

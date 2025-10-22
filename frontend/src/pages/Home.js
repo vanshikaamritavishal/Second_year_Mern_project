@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { auth, db } from "../firebase";
-import { signOut } from "firebase/auth";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
 
 export default function Home() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -24,9 +23,24 @@ export default function Home() {
     fetchUsers();
   }, []);
 
+  // Function to send a request to another user
+  const sendRequest = async (toUser) => {
+    try {
+      await addDoc(collection(db, "requests"), {
+        fromId: user.googleId,
+        toId: toUser.googleId,
+        status: "pending",
+        timestamp: serverTimestamp(),
+      });
+      alert(`Request sent to ${toUser.name}`);
+    } catch (err) {
+      console.error("Error sending request:", err);
+    }
+  };
+
   return (
     <div style={{ padding: "20px" }}>
-      {/* Welcome */}
+      {/* Welcome Section */}
       <div style={{ textAlign: "center", margin: "20px 0" }}>
         <h1>👋 Welcome, {user?.name || "Guest"}</h1>
         {!user && <p>Log in to see other users.</p>}
@@ -52,8 +66,18 @@ export default function Home() {
                 textAlign: "center",
               }}
             >
+              {/* Profile Photo */}
+              {u.photoURL && (
+                <img
+                  src={u.photoURL}
+                  alt={u.name}
+                  style={{ width: "80px", height: "80px", borderRadius: "50%", marginBottom: "10px" }}
+                />
+              )}
+
               <h3>{u.name}</h3>
               <p>{u.college}</p>
+
               {/* LinkedIn link */}
               {u.linkedIn && (
                 <p>
@@ -68,6 +92,7 @@ export default function Home() {
                 </p>
               )}
 
+              {/* Skills Tags */}
               <div
                 style={{
                   display: "flex",
@@ -90,6 +115,8 @@ export default function Home() {
                   </span>
                 ))}
               </div>
+
+              {/* Send Request Button */}
               <button
                 style={{
                   marginTop: "10px",
@@ -100,7 +127,7 @@ export default function Home() {
                   color: "#fff",
                   border: "none",
                 }}
-                onClick={() => alert(`Send request to ${u.name}`)}
+                onClick={() => sendRequest(u)}
               >
                 Send Request
               </button>
