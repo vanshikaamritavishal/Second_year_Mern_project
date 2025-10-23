@@ -23,7 +23,7 @@ export default function Home() {
     fetchUsers();
   }, []);
 
-  // Function to send a request to another user
+  // Send connection request
   const sendRequest = async (toUser) => {
     try {
       await addDoc(collection(db, "requests"), {
@@ -46,11 +46,11 @@ export default function Home() {
         {!user && <p>Log in to see other users.</p>}
       </div>
 
-      {/* Users List */}
+      {/* Users Grid */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
           gap: "20px",
         }}
       >
@@ -62,8 +62,10 @@ export default function Home() {
               style={{
                 border: "1px solid #ddd",
                 padding: "15px",
-                borderRadius: "8px",
+                borderRadius: "12px",
                 textAlign: "center",
+                background: "#fafafa",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
               }}
             >
               {/* Profile Photo */}
@@ -71,14 +73,40 @@ export default function Home() {
                 <img
                   src={u.photoURL}
                   alt={u.name}
-                  style={{ width: "80px", height: "80px", borderRadius: "50%", marginBottom: "10px" }}
+                  style={{
+                    width: "80px",
+                    height: "80px",
+                    borderRadius: "50%",
+                    marginBottom: "10px",
+                  }}
                 />
               )}
 
+              {/* Name */}
               <h3>{u.name}</h3>
-              <p>{u.college}</p>
 
-              {/* LinkedIn link */}
+              {/* Age */}
+              {u.age && (
+                <p style={{ color: "#666", margin: "4px 0" }}>
+                  {u.age}
+                </p>
+              )}
+
+              {/* Profession */}
+              {u.profession && (
+                <p style={{ fontWeight: "bold", color: "#333" }}>
+                  {u.profession}
+                </p>
+              )}
+
+              {/* Location */}
+              {(u.city || u.state) && (
+                <p style={{ color: "#555" }}>
+                  📍 {u.city && `${u.city}, `}{u.state}
+                </p>
+              )}
+
+              {/* LinkedIn */}
               {u.linkedIn && (
                 <p>
                   <a
@@ -92,45 +120,68 @@ export default function Home() {
                 </p>
               )}
 
-              {/* Skills Tags */}
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  justifyContent: "center",
-                }}
-              >
-                {u.skills?.map((skill) => (
-                  <span
-                    key={skill}
-                    style={{
-                      background: "#ddd",
-                      borderRadius: "12px",
-                      padding: "4px 10px",
-                      margin: "4px",
-                      fontSize: "12px",
-                    }}
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
+              {/* Skills */}
+              {u.skills?.length > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                    marginTop: "10px",
+                  }}
+                >
+                  {u.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      style={{
+                        background: "#e0e0e0",
+                        borderRadius: "12px",
+                        padding: "4px 10px",
+                        margin: "4px",
+                        fontSize: "12px",
+                      }}
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              )}
 
-              {/* Send Request Button */}
-              <button
-                style={{
-                  marginTop: "10px",
-                  padding: "6px 12px",
-                  borderRadius: "6px",
-                  cursor: "pointer",
-                  background: "#4CAF50",
-                  color: "#fff",
-                  border: "none",
-                }}
-                onClick={() => sendRequest(u)}
-              >
-                Send Request
-              </button>
+              {/* Buttons */}
+              <div style={{ marginTop: "15px" }}>
+                {/* Send Request */}
+                <button
+                  style={{
+                    padding: "8px 14px",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    background: "#4CAF50",
+                    color: "#fff",
+                    border: "none",
+                    marginRight: "8px",
+                  }}
+                  onClick={() => sendRequest(u)}
+                >
+                  Send Request
+                </button>
+
+                {/* Calendly Button (only if available) */}
+                {u.calendlyLink && (
+                  <button
+                    style={{
+                      padding: "8px 14px",
+                      borderRadius: "6px",
+                      cursor: "pointer",
+                      background: "#0056D2",
+                      color: "#fff",
+                      border: "none",
+                    }}
+                    onClick={() => window.open(u.calendlyLink, "_blank")}
+                  >
+                    Book Meeting
+                  </button>
+                )}
+              </div>
             </div>
           ))}
       </div>

@@ -12,6 +12,8 @@ export default function Profile() {
     state: "",
     city: "",
     skills: [],
+    profession: "",
+    calendlyLink: "",
   });
 
   const [skillInput, setSkillInput] = useState("");
@@ -25,7 +27,7 @@ export default function Profile() {
         const docRef = doc(db, "users", user.googleId);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setProfile({ ...profile, ...docSnap.data() });
+          setProfile((prev) => ({ ...prev, ...docSnap.data() }));
         }
       } catch (err) {
         console.error("Failed to fetch profile:", err);
@@ -41,19 +43,31 @@ export default function Profile() {
   };
 
   const handleSkillAdd = () => {
-    if (skillInput && !profile.skills.includes(skillInput)) {
+    if (skillInput && !profile.skills.includes(skillInput.trim())) {
       setProfile({ ...profile, skills: [...profile.skills, skillInput] });
       setSkillInput("");
     }
   };
 
   const handleSkillRemove = (skill) => {
-    setProfile({ ...profile, skills: profile.skills.filter((s) => s !== skill) });
+    setProfile({
+      ...profile,
+      skills: profile.skills.filter((s) => s !== skill),
+    });
   };
 
   const handleSave = async () => {
     if (!user?.googleId) {
       alert("User not found. Please log in again.");
+      return;
+    }
+
+    // Optional validation for Calendly link
+    if (
+      profile.calendlyLink &&
+      !profile.calendlyLink.startsWith("https://calendly.com/")
+    ) {
+      alert("Please enter a valid Calendly link (starting with https://calendly.com/)");
       return;
     }
 
@@ -121,6 +135,38 @@ export default function Profile() {
         style={{ width: "100%", padding: "8px", margin: "8px 0" }}
       />
 
+      {/* Profession Dropdown */}
+      <select
+        name="profession"
+        value={profile.profession}
+        onChange={handleChange}
+        style={{
+          width: "100%",
+          padding: "8px",
+          margin: "8px 0",
+          borderRadius: "6px",
+        }}
+        required
+      >
+        <option value="">Select Profession</option>
+        <option value="Student">Student</option>
+        <option value="Software Developer">Software Developer</option>
+        <option value="Designer">Designer</option>
+        <option value="Data Analyst">Data Analyst</option>
+        <option value="Entrepreneur">Entrepreneur</option>
+        <option value="Other">Other</option>
+      </select>
+
+      {/* Optional Calendly Link */}
+      <input
+        type="text"
+        name="calendlyLink"
+        placeholder="Calendly Link (optional)"
+        value={profile.calendlyLink}
+        onChange={handleChange}
+        style={{ width: "100%", padding: "8px", margin: "8px 0" }}
+      />
+
       {/* Skills */}
       <div style={{ margin: "10px 0" }}>
         <input
@@ -128,6 +174,7 @@ export default function Profile() {
           placeholder="Add skill"
           value={skillInput}
           onChange={(e) => setSkillInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSkillAdd()}
           style={{ padding: "8px", width: "70%" }}
         />
         <button
