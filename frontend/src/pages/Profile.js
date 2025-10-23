@@ -35,7 +35,6 @@ export default function Profile() {
     };
 
     fetchProfile();
-    // eslint-disable-next-line
   }, [user?.googleId]);
 
   const handleChange = (e) => {
@@ -62,12 +61,13 @@ export default function Profile() {
       return;
     }
 
-    // Optional validation for Calendly link
     if (
       profile.calendlyLink &&
       !profile.calendlyLink.startsWith("https://calendly.com/")
     ) {
-      alert("Please enter a valid Calendly link (starting with https://calendly.com/)");
+      alert(
+        "Please enter a valid Calendly link (starting with https://calendly.com/)"
+      );
       return;
     }
 
@@ -83,57 +83,49 @@ export default function Profile() {
   };
 
   return (
-    <div style={{ maxWidth: "600px", margin: "50px auto", textAlign: "center" }}>
-      <h1>Profile</h1>
+    <div
+      style={{
+        maxWidth: "750px",            // increased width
+        width: "90%",                 // responsive
+        margin: "50px auto",
+        padding: "30px",              // more padding
+        background: "#f5f1e8",
+        borderRadius: "12px",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.15)", // stronger shadow
+        color: "#333",
+      }}
+    >
+      <h1 style={{ textAlign: "center", color: "#1e1e2f", marginBottom: "25px" }}>
+        Profile
+      </h1>
 
-      <input
-        type="text"
-        name="name"
-        placeholder="Name"
-        value={profile.name}
-        onChange={handleChange}
-        style={{ width: "100%", padding: "8px", margin: "8px 0" }}
-      />
-      <input
-        type="number"
-        name="age"
-        placeholder="Age"
-        value={profile.age}
-        onChange={handleChange}
-        style={{ width: "100%", padding: "8px", margin: "8px 0" }}
-      />
-      <input
-        type="text"
-        name="college"
-        placeholder="College"
-        value={profile.college}
-        onChange={handleChange}
-        style={{ width: "100%", padding: "8px", margin: "8px 0" }}
-      />
-      <input
-        type="text"
-        name="state"
-        placeholder="State"
-        value={profile.state}
-        onChange={handleChange}
-        style={{ width: "100%", padding: "8px", margin: "8px 0" }}
-      />
-      <input
-        type="text"
-        name="city"
-        placeholder="City"
-        value={profile.city}
-        onChange={handleChange}
-        style={{ width: "100%", padding: "8px", margin: "8px 0" }}
-      />
-      <input
-        type="text"
-        name="linkedIn"
-        placeholder="LinkedIn URL"
-        value={profile.linkedIn}
-        onChange={handleChange}
-        style={{ width: "100%", padding: "8px", margin: "8px 0" }}
-      />
+      {/* Input Fields */}
+      {[
+        { name: "name", placeholder: "Name", type: "text" },
+        { name: "age", placeholder: "Age", type: "number" },
+        { name: "college", placeholder: "College", type: "text" },
+        { name: "state", placeholder: "State", type: "text" },
+        { name: "city", placeholder: "City", type: "text" },
+        { name: "linkedIn", placeholder: "LinkedIn URL", type: "text" },
+        { name: "calendlyLink", placeholder: "Calendly Link (optional)", type: "text" },
+      ].map((field) => (
+        <input
+          key={field.name}
+          type={field.type}
+          name={field.name}
+          placeholder={field.placeholder}
+          value={profile[field.name]}
+          onChange={handleChange}
+          style={{
+            width: "100%",
+            padding: "12px",         // increased padding
+            margin: "10px 0",
+            borderRadius: "8px",
+            border: "1px solid #ccc",
+            fontSize: "14px",
+          }}
+        />
+      ))}
 
       {/* Profession Dropdown */}
       <select
@@ -142,9 +134,11 @@ export default function Profile() {
         onChange={handleChange}
         style={{
           width: "100%",
-          padding: "8px",
-          margin: "8px 0",
-          borderRadius: "6px",
+          padding: "12px",
+          margin: "10px 0",
+          borderRadius: "8px",
+          border: "1px solid #ccc",
+          fontSize: "14px",
         }}
         required
       >
@@ -157,44 +151,62 @@ export default function Profile() {
         <option value="Other">Other</option>
       </select>
 
-      {/* Optional Calendly Link */}
-      <input
-        type="text"
-        name="calendlyLink"
-        placeholder="Calendly Link (optional)"
-        value={profile.calendlyLink}
-        onChange={handleChange}
-        style={{ width: "100%", padding: "8px", margin: "8px 0" }}
-      />
-
       {/* Skills */}
-      <div style={{ margin: "10px 0" }}>
+      <div
+        style={{
+          display: "flex",
+          margin: "15px 0",
+          gap: "10px",
+          flexWrap: "wrap",
+          justifyContent: "center",
+        }}
+      >
         <input
           type="text"
           placeholder="Add skill"
           value={skillInput}
           onChange={(e) => setSkillInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSkillAdd()}
-          style={{ padding: "8px", width: "70%" }}
+          style={{
+            flex: "1 1 60%",
+            padding: "12px",
+            borderRadius: "8px",
+            border: "1px solid #ccc",
+            fontSize: "14px",
+          }}
         />
         <button
           onClick={handleSkillAdd}
-          style={{ padding: "8px 12px", marginLeft: "10px" }}
+          style={{
+            padding: "12px 18px",
+            background: "#4CAF50",
+            color: "#fff",
+            border: "none",
+            borderRadius: "8px",
+            cursor: "pointer",
+            fontWeight: "500",
+            transition: "background 0.2s",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "#43a047")}
+          onMouseLeave={(e) => (e.currentTarget.style.background = "#4CAF50")}
         >
           Add
         </button>
       </div>
 
-      <div style={{ marginBottom: "10px" }}>
+      {/* Skill Tags */}
+      <div style={{ marginBottom: "20px", textAlign: "center" }}>
         {profile.skills.map((skill) => (
           <span
             key={skill}
             style={{
               display: "inline-block",
-              background: "#ddd",
-              padding: "5px 10px",
-              borderRadius: "15px",
+              background: "#b5895b33",
+              padding: "6px 14px",
+              borderRadius: "20px",
               margin: "5px",
+              fontSize: "13px",
+              fontWeight: "500",
               cursor: "pointer",
             }}
             onClick={() => handleSkillRemove(skill)}
@@ -204,16 +216,23 @@ export default function Profile() {
         ))}
       </div>
 
+      {/* Save Button */}
       <button
         onClick={handleSave}
         style={{
-          padding: "10px 20px",
+          width: "100%",
+          padding: "14px",
           background: "#4CAF50",
           color: "#fff",
           border: "none",
-          borderRadius: "8px",
+          borderRadius: "10px",
+          fontWeight: "600",
+          fontSize: "16px",
           cursor: "pointer",
+          transition: "background 0.2s",
         }}
+        onMouseEnter={(e) => (e.currentTarget.style.background = "#43a047")}
+        onMouseLeave={(e) => (e.currentTarget.style.background = "#4CAF50")}
       >
         Save Profile
       </button>

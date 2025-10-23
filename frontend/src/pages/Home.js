@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { auth, db } from "../firebase";
-import { collection, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../firebase";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 
 export default function Home() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -39,11 +44,20 @@ export default function Home() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div
+      style={{
+        padding: "20px",
+        background: "#f5f1e8", // beige background
+        minHeight: "100vh",
+        color: "#333",
+      }}
+    >
       {/* Welcome Section */}
       <div style={{ textAlign: "center", margin: "20px 0" }}>
-        <h1>👋 Welcome, {user?.name || "Guest"}</h1>
-        {!user && <p>Log in to see other users.</p>}
+        <h1 style={{ color: "#1e1e2f" }}>
+          👋 Welcome, {user?.name || "Guest"}
+        </h1>
+        {!user && <p style={{ color: "#666" }}>Log in to see other users.</p>}
       </div>
 
       {/* Users Grid */}
@@ -60,12 +74,14 @@ export default function Home() {
             <div
               key={u.googleId}
               style={{
-                border: "1px solid #ddd",
-                padding: "15px",
                 borderRadius: "12px",
-                textAlign: "center",
-                background: "#fafafa",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+                padding: "16px",
+                background: "#fff8f0",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                transition: "transform 0.2s",
               }}
             >
               {/* Profile Photo */}
@@ -77,78 +93,117 @@ export default function Home() {
                     width: "80px",
                     height: "80px",
                     borderRadius: "50%",
-                    marginBottom: "10px",
+                    objectFit: "cover",
+                    marginBottom: "12px",
+                    border: "2px solid #b5895b",
                   }}
                 />
               )}
 
-              {/* Name */}
-              <h3>{u.name}</h3>
+              {/* User Info */}
+              <div style={{ textAlign: "center", padding: "8px 0" }}>
+                {/* Name */}
+                <h3
+                  style={{
+                    color: "#333",
+                    margin: "0 0 6px 0",
+                    fontSize: "18px",
+                    fontWeight: "700",
+                    lineHeight: "1.2",
+                  }}
+                >
+                  {u.name}
+                </h3>
 
-              {/* Age */}
-              {u.age && (
-                <p style={{ color: "#666", margin: "4px 0" }}>
-                  {u.age}
-                </p>
-              )}
+                {/* Age & Profession */}
+                <div
+                  style={{
+                    fontSize: "14px",
+                    color: "#555",
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: "12px",
+                    marginBottom: "8px",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {u.age && <span>Age: {u.age} yrs</span>}
+                  {u.profession && <span>Profession: {u.profession}</span>}
+                </div>
 
-              {/* Profession */}
-              {u.profession && (
-                <p style={{ fontWeight: "bold", color: "#333" }}>
-                  {u.profession}
-                </p>
-              )}
-
-              {/* Location */}
-              {(u.city || u.state) && (
-                <p style={{ color: "#555" }}>
-                  📍 {u.city && `${u.city}, `}{u.state}
-                </p>
-              )}
-
-              {/* LinkedIn */}
-              {u.linkedIn && (
-                <p>
-                  <a
-                    href={u.linkedIn}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ color: "#0A66C2", textDecoration: "underline" }}
-                  >
-                    LinkedIn Profile
-                  </a>
-                </p>
-              )}
-
-              {/* Skills */}
-              {u.skills?.length > 0 && (
+                {/* Location & LinkedIn */}
                 <div
                   style={{
                     display: "flex",
-                    flexWrap: "wrap",
                     justifyContent: "center",
-                    marginTop: "10px",
+                    gap: "12px",
+                    alignItems: "center",
+                    fontSize: "14px",
+                    color: "#555",
+                    flexWrap: "wrap",
+                    marginBottom: u.skills?.length > 0 ? "6px" : "10px",
                   }}
                 >
-                  {u.skills.map((skill) => (
+                  {(u.city || u.state) && (
                     <span
-                      key={skill}
                       style={{
-                        background: "#e0e0e0",
-                        borderRadius: "12px",
-                        padding: "4px 10px",
-                        margin: "4px",
-                        fontSize: "12px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "4px",
                       }}
                     >
-                      {skill}
+                      📍 {u.city && `${u.city}, `}{u.state}
                     </span>
-                  ))}
+                  )}
+                  {u.linkedIn && (
+                    <a
+                      href={u.linkedIn}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        color: "#0A66C2",
+                        textDecoration: "underline",
+                        fontWeight: "500",
+                      }}
+                    >
+                      LinkedIn
+                    </a>
+                  )}
                 </div>
-              )}
 
-              {/* Buttons */}
-              <div style={{ marginTop: "15px" }}>
+                {/* Skills */}
+                {u.skills?.length > 0 && (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      flexWrap: "wrap",
+                      gap: "6px",
+                      marginTop: "6px",
+                    }}
+                  >
+                    {u.skills.map((skill) => (
+                      <span
+                        key={skill}
+                        style={{
+                          background: "#b5895b33",
+                          borderRadius: "20px",
+                          padding: "4px 10px",
+                          fontSize: "12px",
+                          fontWeight: "500",
+                          color: "#333",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              <div style={{ marginTop: "15px", display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center" }}>
                 {/* Send Request */}
                 <button
                   style={{
@@ -158,25 +213,40 @@ export default function Home() {
                     background: "#4CAF50",
                     color: "#fff",
                     border: "none",
-                    marginRight: "8px",
+                    fontWeight: "500",
+                    transition: "background 0.2s",
                   }}
                   onClick={() => sendRequest(u)}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.background = "#43a047")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.background = "#4CAF50")
+                  }
                 >
                   Send Request
                 </button>
 
-                {/* Calendly Button (only if available) */}
+                {/* Calendly Button */}
                 {u.calendlyLink && (
                   <button
                     style={{
                       padding: "8px 14px",
                       borderRadius: "6px",
                       cursor: "pointer",
-                      background: "#0056D2",
+                      background: "#b5895b",
                       color: "#fff",
                       border: "none",
+                      fontWeight: "500",
+                      transition: "background 0.2s",
                     }}
                     onClick={() => window.open(u.calendlyLink, "_blank")}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background = "#a1794e")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = "#b5895b")
+                    }
                   >
                     Book Meeting
                   </button>
