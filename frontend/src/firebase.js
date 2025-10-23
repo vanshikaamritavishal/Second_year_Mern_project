@@ -1,16 +1,16 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";   // <-- Add Firestore
-import { getStorage } from "firebase/storage";       // <-- Add Storage
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAwJr1yWuVL7u14AdZX4AgWOoyY_lxETr8",
-  authDomain: "skillsync-25.firebaseapp.com",
-  projectId: "skillsync-25",
-  storageBucket: "skillsync-25.appspot.com",
-  messagingSenderId: "842860736769",
-  appId: "1:842860736769:web:c3f10b77de1bab1b2a2b00",
-  measurementId: "G-YC7TZ8ZXLM"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
@@ -20,7 +20,8 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const provider = new GoogleAuthProvider();
 // Firestore
-export const db = getFirestore(app);     // <-- Export Firestore
+export const db = getFirestore(app);
 // Storage
-export const storage = getStorage(app);  // <-- Export Storage
+export const storage = getStorage(app);
+
 export default app;
