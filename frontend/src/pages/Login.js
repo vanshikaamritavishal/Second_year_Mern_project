@@ -2,14 +2,14 @@ import React from "react";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../firebase";
 import axios from "axios";
-
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 function Login() {
   const handleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      const res = await axios.post("/api/auth/google", {
+      const res = await axios.post(`${BACKEND_URL}/api/auth/google`, {
         googleId: user.uid,
         name: user.displayName,
         email: user.email,
