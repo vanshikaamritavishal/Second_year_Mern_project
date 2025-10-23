@@ -21,6 +21,7 @@ export default function Messages() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [unreadCounts, setUnreadCounts] = useState({});
   const messagesEndRef = useRef(null);
 
   // Fetch all users
@@ -86,14 +87,59 @@ export default function Messages() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Track unread messages
+  useEffect(() => {
+    const q = query(
+      collection(db, "messages"),
+      where("toId", "==", user.googleId),
+      where("read", "==", false)
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const counts = {};
+      snapshot.docs.forEach((docSnap) => {
+        const msg = docSnap.data();
+        const otherId = msg.fromId;
+        counts[otherId] = (counts[otherId] || 0) + 1;
+      });
+      setUnreadCounts(counts);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Mark messages as read when a chat is opened
+  useEffect(() => {
+    if (!selectedUser) return;
+    const chatId = [user.googleId, selectedUser.id].sort().join("_");
+    const q = query(
+      collection(db, "messages"),
+      where("chatId", "==", chatId),
+      where("toId", "==", user.googleId),
+      where("read", "==", false)
+    );
+
+    const markRead = async () => {
+      const snapshot = await getDocs(q);
+      snapshot.docs.forEach(async (docSnap) => {
+        await updateDoc(doc(db, "messages", docSnap.id), { read: true });
+      });
+    };
+    markRead();
+  }, [selectedUser]);
+
   const acceptRequest = async (req) => {
     const requestRef = doc(db, "requests", req.id);
     await updateDoc(requestRef, { status: "accepted" });
+    const fromUser = allUsers.find((u) => u.googleId === req.fromId);
+    alert(`Request from ${fromUser?.name || "Someone"} has been accepted.`);
   };
 
   const rejectRequest = async (req) => {
     const requestRef = doc(db, "requests", req.id);
     await updateDoc(requestRef, { status: "rejected" });
+    const fromUser = allUsers.find((u) => u.googleId === req.fromId);
+    alert(`Request from ${fromUser?.name || "Someone"} has been rejected.`);
   };
 
   const sendMessage = async () => {
@@ -105,6 +151,7 @@ export default function Messages() {
       toId: selectedUser.id,
       message: newMessage,
       timestamp: serverTimestamp(),
+      read: false,
     });
     setNewMessage("");
   };
@@ -201,6 +248,9 @@ export default function Messages() {
                 background:
                   selectedUser?.id === u.id ? "#d1f0ff" : "transparent",
                 borderBottom: "1px solid #eee",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
                 transition: "background 0.2s",
               }}
               onMouseEnter={(e) => (e.currentTarget.style.background = "#eef6ff")}
@@ -210,6 +260,19 @@ export default function Messages() {
               }
             >
               <strong>{u.name}</strong>
+              {unreadCounts[u.id] > 0 && (
+                <span
+                  style={{
+                    background: "red",
+                    color: "white",
+                    borderRadius: "50%",
+                    padding: "2px 7px",
+                    fontSize: "12px",
+                  }}
+                >
+                  {unreadCounts[u.id]}
+                </span>
+              )}
             </div>
           ))}
           {acceptedUsers.length === 0 && (
@@ -289,7 +352,7 @@ export default function Messages() {
                 type="text"
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && sendMessage()} // ✅ Press Enter to send
+                onKeyDown={(e) => e.key === "Enter" && sendMessage()}
                 placeholder="Type a message..."
                 style={{
                   flex: 1,
