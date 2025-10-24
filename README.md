@@ -81,7 +81,26 @@ REACT_APP_FIREBASE_AUTH_DOMAIN=<your_firebase_auth_domain>
 git clone https://github.com/<your-username>/skillsync.git
 cd skillsync
 ```
+### 2️⃣ Install dependencies
+```bash
+cd backend && npm install
+cd ../frontend && npm install
+```
+### 3️⃣ Run locally
+Open two terminals:
+```bash
+# Terminal 1
+cd backend
+npm start
 
-###2️⃣ Install dependencies
+# Terminal 2
+cd frontend
+npm start
+```
+Then visit:
+👉 http://localhost:3000
+
+
+
 
 
