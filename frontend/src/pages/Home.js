@@ -130,6 +130,19 @@ export default function Home() {
                   {u.age && <span>Age: {u.age} yrs</span>}
                   {u.profession && <span>Profession: {u.profession}</span>}
                 </div>
+                {/* College */}
+                {u.college && (
+                  <div
+                    style={{
+                      fontSize: "14px",
+                      color: "#555",
+                      marginBottom: "8px",
+                      textAlign: "center",
+                    }}
+                  >
+                    🎓 {u.college}
+                  </div>
+                )}
 
                 {/* Location & LinkedIn */}
                 <div
@@ -152,7 +165,8 @@ export default function Home() {
                         gap: "4px",
                       }}
                     >
-                      📍 {u.city && `${u.city}, `}{u.state}
+                      📍 {u.city && `${u.city}, `}
+                      {u.state}
                     </span>
                   )}
                   {u.linkedIn && (
@@ -203,7 +217,15 @@ export default function Home() {
               </div>
 
               {/* Action Buttons */}
-              <div style={{ marginTop: "15px", display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center" }}>
+              <div
+                style={{
+                  marginTop: "15px",
+                  display: "flex",
+                  gap: "10px",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                }}
+              >
                 {/* Send Request */}
                 <button
                   style={{
