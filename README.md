@@ -101,6 +101,67 @@ Then visit:
 👉 http://localhost:3000
 
 
+#🧑‍💻 Key Code Highlights
+##🔹 Firebase Login (frontend/src/components/Login.js)
+```
+const result = await signInWithPopup(auth, provider);
+const user = result.user;
 
+await axios.post(`${BACKEND_URL}/api/auth/google`, {
+  googleId: user.uid,
+  name: user.displayName,
+  email: user.email,
+  photoURL: user.photoURL,
+});
+```
+##🔹 Google Auth Route (backend/routes/authRoutes.js)
+```
+router.post("/google", async (req, res) => {
+  try {
+    const { googleId, name, email, photoURL } = req.body;
+    if (!email) return res.status(400).json({ message: "Email is required" });
+
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({ googleId, name, email, profilePhoto: photoURL });
+    } else {
+      user.googleId = googleId;
+      user.profilePhoto = photoURL;
+      await user.save();
+    }
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    res.json({ user, token });
+  } catch (err) {
+    console.error("Google login error:", err);
+    res.status(500).json({ message: err.message });
+  }
+});
+```
+##🔹 Mongoose Schema (backend/models/User.js)
+```
+const userSchema = new mongoose.Schema({
+  googleId: String,
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  profilePhoto: String,
+  age: Number,
+  college: String,
+  city: String,
+  state: String,
+  skills: [String],
+  requests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+});
+```
+
+#🚀 Deployment (Render)
+
+- Frontend: Build React app and deploy as a static site on Render
+
+- Backend: Deploy Express API as a web service
+
+- MongoDB: Use MongoDB Atlas with IP Access set to 0.0.0.0/0
+
+#🛠️ Common Issues
 
 
