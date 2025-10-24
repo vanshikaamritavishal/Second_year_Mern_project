@@ -162,6 +162,26 @@ const userSchema = new mongoose.Schema({
 
 - MongoDB: Use MongoDB Atlas with IP Access set to 0.0.0.0/0
 
-# 🛠️ Common Issues
+# 🛠️ Common Issues & Fixes
 
+| **Issue** | **Cause** | **Fix** |
+|------------|------------|---------|
+| MongoDB connection failed | Cluster access not configured | Add IP `0.0.0.0/0` in **Network Access** |
+| auth/popup-blocked | Browser blocked Google popup | Allow popups or retry login |
+| 500 Internal Server Error | Email missing or DB timeout | Check backend logs and schema |
+
+# 💡 Future Enhancements
+
+- 🧩 Add user matching based on skill similarity
+
+- 📸 Integrate Cloudinary for profile photo uploads
+
+- 💬 Add notifications for connection requests
+- 
+
+# 👩‍💻 Author
+
+## Vanshika — Second-Year CS Student
+- 💻 Passionate about full-stack development, automation, and scalable systems.
+- 📍 Built as part of the Scaler School of Technology coursework.
 
