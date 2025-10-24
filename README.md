@@ -35,6 +35,7 @@ Built using the **MERN stack (MongoDB, Express.js, React.js, Node.js)** with **F
 ---
 
 ## 📂 Project Structure
+```
 skillsync/
 │
 ├── backend/
@@ -56,9 +57,8 @@ skillsync/
 │ └── .env
 │
 └── README.md
-
+```
 ---
-
 ## ⚙️ Environment Variables
 
 ### 🔸 Backend (`/backend/.env`)
