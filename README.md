@@ -101,8 +101,8 @@ Then visit:
 👉 http://localhost:3000
 
 
-#🧑‍💻 Key Code Highlights
-##🔹 Firebase Login (frontend/src/components/Login.js)
+# 🧑‍💻 Key Code Highlights
+## 🔹 Firebase Login (frontend/src/components/Login.js)
 ```
 const result = await signInWithPopup(auth, provider);
 const user = result.user;
@@ -114,7 +114,7 @@ await axios.post(`${BACKEND_URL}/api/auth/google`, {
   photoURL: user.photoURL,
 });
 ```
-##🔹 Google Auth Route (backend/routes/authRoutes.js)
+## 🔹 Google Auth Route (backend/routes/authRoutes.js)
 ```
 router.post("/google", async (req, res) => {
   try {
@@ -138,7 +138,7 @@ router.post("/google", async (req, res) => {
   }
 });
 ```
-##🔹 Mongoose Schema (backend/models/User.js)
+## 🔹 Mongoose Schema (backend/models/User.js)
 ```
 const userSchema = new mongoose.Schema({
   googleId: String,
@@ -154,7 +154,7 @@ const userSchema = new mongoose.Schema({
 });
 ```
 
-#🚀 Deployment (Render)
+# 🚀 Deployment (Render)
 
 - Frontend: Build React app and deploy as a static site on Render
 
@@ -162,6 +162,6 @@ const userSchema = new mongoose.Schema({
 
 - MongoDB: Use MongoDB Atlas with IP Access set to 0.0.0.0/0
 
-#🛠️ Common Issues
+# 🛠️ Common Issues
 
 
