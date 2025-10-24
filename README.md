@@ -74,6 +74,14 @@ REACT_APP_BACKEND_URL=https://second-year-mern-project.onrender.com
 REACT_APP_FIREBASE_API_KEY=<your_firebase_api_key>
 REACT_APP_FIREBASE_AUTH_DOMAIN=<your_firebase_auth_domain>
 ```
+## 🧩 Setup Instructions
 
+### 1️⃣ Clone the repository
+```bash
+git clone https://github.com/<your-username>/skillsync.git
+cd skillsync
+```
+
+###2️⃣ Install dependencies
 
 
