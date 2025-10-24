@@ -143,11 +143,11 @@ export default function Profile() {
         required
       >
         <option value="">Select Profession</option>
-        <option value="Student">Student</option>
-        <option value="Software Developer">Software Developer</option>
-        <option value="Designer">Designer</option>
+        <option value="School Student">School Student</option>
+        <option value="College Student">College Student</option>
+        <option value="Professor">Professor</option>
         <option value="Data Analyst">Data Analyst</option>
-        <option value="Entrepreneur">Entrepreneur</option>
+        <option value="Mentor">Mentor</option>
         <option value="Other">Other</option>
       </select>
 
