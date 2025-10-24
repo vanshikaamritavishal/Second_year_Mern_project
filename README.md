@@ -68,4 +68,12 @@ MONGO_URI=mongodb+srv://<username>:<encoded_password>@cluster0.xxxxx.mongodb.net
 JWT_SECRET=teamup_secret_key
 REACT_APP_FIREBASE_AUTH_DOMAIN=<your_firebase_auth_domain>
 ```
+### 🔸 Frontend (`/frontend/.env`)
+```env
+REACT_APP_BACKEND_URL=https://second-year-mern-project.onrender.com
+REACT_APP_FIREBASE_API_KEY=<your_firebase_api_key>
+REACT_APP_FIREBASE_AUTH_DOMAIN=<your_firebase_auth_domain>
+```
+
+
 
